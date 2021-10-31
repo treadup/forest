@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // GetString gets reads a line from stdin. It is similar to gets in C.
@@ -21,10 +22,24 @@ func GetRune() rune {
 	return char
 }
 
+// GetTokens reads tokens from stdin until a newline is reached
+func GetTokens() []string {
+   line := GetString()
+   return strings.Fields(line)
+}
+
 // Prompt prints a prompt and returns input from the user.
 func Prompt() string {
 	fmt.Print("> ")
 	return GetString()
+}
+
+// PromptTokens prints a prompt and returns an array of tokens
+// input by the user. It will stop reading input when a newline
+// is reached.
+func PromptTokens() []string {
+	fmt.Print("> ")
+	return GetTokens()
 }
 
 // UnknonwCommand is used when the command input by the user is not recognized.
@@ -64,7 +79,11 @@ func main() {
 			DescribeLocation(location)
 			last_described = location
 		}
-		command := Prompt()
+		tokens := PromptTokens()
+		var command string
+		if len(tokens) > 0 {
+			command = tokens[0]
+		}
 		switch command {
 		case "quit":
 			fmt.Println("Good bye")
